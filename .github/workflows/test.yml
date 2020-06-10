@@ -1,0 +1,26 @@
+name: Test
+
+on:
+  push:
+    branches: [ gh-actions ]
+  pull_request:
+    branches: [ gh-actions ]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - windows-latest
+          - ubuntu-latest
+          - macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: ci/install.sh
+      run: script/ci/install.sh
+
+    - name: ci/test.sh
+      run: script/ci/test.sh
