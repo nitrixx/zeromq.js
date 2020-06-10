@@ -12,7 +12,7 @@ if [ -n "${WINDIR}" ]; then
   # Working directory is NAPI temporary build directory.
   PATH_PREFIX="${PWD}/libzmq"
   ARTIFACT="${PATH_PREFIX}/lib/libzmq.lib"
-  CMAKE_GENERATOR="Visual Studio 15 2017"
+  CMAKE_GENERATOR="Visual Studio 16 2019"
   TOOLSET_VERSION="141"
 
   # In Travis CI, Node paths are:
