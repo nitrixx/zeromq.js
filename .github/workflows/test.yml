@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ gh-actions ]
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   test:
     runs-on: ${{ matrix.os }}
