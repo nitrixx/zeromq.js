@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # https://github.com/alpinelinux/alpine-chroot-install/blob/master/alpine-chroot-install
 # vim: set ts=4:
 #---help---
@@ -159,7 +159,7 @@ usage() {
 
 gen_chroot_script() {
 	cat <<-EOF
-		#!/bin/sh
+		#!/bin/bash
 		set -e
 
 		ENV_FILTER_REGEX='($(echo "$CHROOT_KEEP_VARS" | tr -s ' ' '|'))'
@@ -381,7 +381,7 @@ einfo 'Setting up Alpine'
 	fi
 
 	if [ -n "${SUDO_USER:-}" ]; then
-		adduser -u "${SUDO_UID:-1000}" -G users -s /bin/sh -D "${SUDO_USER:-}" || true
+		adduser -u "${SUDO_UID:-1000}" -G users -s /bin/bash -D "${SUDO_USER:-}" || true
 	fi
 EOF
 
