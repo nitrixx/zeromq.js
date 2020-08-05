@@ -1510,6 +1510,88 @@ export class XPublisher extends Socket {
   constructor(options?: SocketOptions<XPublisher>) {
     super(SocketType.XPublisher, options)
   }
+
+  /**
+   * Accept an incoming message filters. Call this method to subscribe a connecting
+   * client to messages beginning with the given prefix. This can only be called
+   * if the {@link XPublisher} socket subscription handling mode is set to
+   * manual.
+   *
+   * Multiple filters may be attached to a single socket, in which case a
+   * message shall be accepted if it matches at least one filter. Subscribing
+   * without any filters shall subscribe to **all** incoming messages.
+   *
+   * ```typescript
+   * const xpub = new XPublisher()
+   *
+   * // Listen to incoming subscription messages
+   * const [msg] = await xpub.receive()
+   *
+   * // Skip the first byte since it is not part of the message filter
+   * const msgFilter = msg.slice(1)
+   *
+   * // Subscribe the requesting client to the provided message filter
+   * xpub.subscribe(msgFilter)
+   * ```
+   *
+   * @param prefixes The prefixes of messages to subscribe to.
+   */
+  subscribe(...prefixes: Array<Buffer | string>) {
+    if (!this.manual) {
+      throw new Error(
+        "XPublisher is not in manual mode. " +
+          "It is not possible to call subscribe() if the XPublisher is not " +
+          "set to manual. Refer to the documentation of ZMQ_XPUB_MANUAL for more info.",
+      )
+    }
+    if (prefixes.length === 0) {
+      this.setStringOption(6, null)
+    } else {
+      for (const prefix of prefixes) {
+        this.setStringOption(6, prefix)
+      }
+    }
+  }
+
+  /**
+   * Remove an existing message filter which was previously established with
+   * {@link subscribe}(). This can only be called if the {@link XPublisher}
+   * socket subscription handling mode is set to manual.
+   *
+   * Unsubscribing without any filters shall unsubscribe from the "subscribe
+   * all" filter that is added by calling {@link subscribe}() without arguments.
+   *
+   * ```typescript
+   * const xpub = new XPublisher()
+   *
+   * // Listen to incoming subscription messages
+   * const [msg] = await xpub.receive()
+   *
+   * // Skip the first byte since it is not part of the message filter
+   * const msgFilter = msg.slice(1)
+   *
+   * // Unsubscribe the requesting client from the provided message filter
+   * xpub.unsubscribe(msgFilter)
+   * ```
+   *
+   * @param prefixes The prefixes of messages to subscribe to.
+   */
+  unsubscribe(...prefixes: Array<Buffer | string>) {
+    if (!this.manual) {
+      throw new Error(
+        "XPublisher is not in manual mode. " +
+          "It is not possible to call unsubscribe() if the XPublisher is not " +
+          "set to manual. Refer to the documentation of ZMQ_XPUB_MANUAL for more info.",
+      )
+    }
+    if (prefixes.length === 0) {
+      this.setStringOption(7, null)
+    } else {
+      for (const prefix of prefixes) {
+        this.setStringOption(7, prefix)
+      }
+    }
+  }
 }
 
 export interface XPublisher extends Readable, Writable {}
